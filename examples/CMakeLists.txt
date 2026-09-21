@@ -4,7 +4,7 @@ build_lib_example(
   LIBRARIES_TO_LINK
     ${libntn-observability}
     ${libntn-rrc}
-    ${libntn-traffic}
+    ${libtraffic}
     ${libntn-cho}
     ${libntn-constellation}
     ${libcore}
@@ -26,7 +26,7 @@ build_lib_example(
     ${libntn-observability}
     ${libntn-cho}
     ${libntn-constellation}
-    ${libntn-traffic}
+    ${libtraffic}
     ${libcore}
     ${libnetwork}
     ${libmobility}
@@ -48,7 +48,7 @@ if(TARGET ${libnetsimulyzer})
     LIBRARIES_TO_LINK
       ${libnetsimulyzer}
       ${libntn-observability}
-      ${libntn-traffic}
+      ${libtraffic}
       ${libntn-cho}
       ${libntn-constellation}
       ${libcore}
