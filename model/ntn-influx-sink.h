@@ -8,6 +8,7 @@
 #include <ns3/event-id.h>
 #include <ns3/nstime.h>
 #include <ns3/object.h>
+#include <ns3/system-socket.h>
 
 #include <map>
 #include <string>
@@ -161,7 +162,7 @@ class NtnInfluxSink : public Object
     bool m_dropWarned{false};
     bool m_running{false};
     EventId m_event;
-    int m_udpSocketFd{-1};
+    SystemSocket::Handle m_udpSocketFd{-1};
 };
 
 } // namespace ntnobs

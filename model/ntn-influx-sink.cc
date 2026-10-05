@@ -8,11 +8,6 @@
 #include <ns3/simulator.h>
 #include <ns3/uinteger.h>
 
-#include <arpa/inet.h>
-#include <fcntl.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 #include <cerrno>
 #include <chrono>
@@ -239,7 +234,7 @@ NtnInfluxSink::DoDispose()
     Stop();
     if (m_udpSocketFd >= 0)
     {
-        ::close(m_udpSocketFd);
+        SystemSocket::Close(m_udpSocketFd);
         m_udpSocketFd = -1;
     }
     Object::DoDispose();
@@ -254,6 +249,8 @@ NtnInfluxSink::SetTransport(Transport t)
 void
 NtnInfluxSink::SetUdpEndpoint(const std::string& host, uint16_t port)
 {
+    SystemSocket::Close(m_udpSocketFd);
+    m_udpSocketFd = -1;
     m_udpHost = host;
     m_udpPort = port;
 }
@@ -440,20 +437,12 @@ NtnInfluxSink::SendUdp(const std::string& payload)
 {
     if (m_udpSocketFd < 0)
     {
-        m_udpSocketFd = ::socket(AF_INET, SOCK_DGRAM | SOCK_NONBLOCK, IPPROTO_UDP);
+        m_udpSocketFd = SystemSocket::Connect(m_udpHost, m_udpPort, SystemSocket::Protocol::UDP);
         if (m_udpSocketFd < 0)
         {
             NS_LOG_WARN("UDP socket() failed: " << std::strerror(errno));
             return;
         }
-    }
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(m_udpPort);
-    if (::inet_pton(AF_INET, m_udpHost.c_str(), &addr.sin_addr) != 1)
-    {
-        NS_LOG_WARN("UDP target host invalid: " << m_udpHost);
-        return;
     }
     // InfluxDB UDP listener defaults to 65 535-byte payload; fragment if larger.
     constexpr size_t kMaxDatagram = 60 * 1024;
@@ -485,12 +474,9 @@ NtnInfluxSink::SendUdp(const std::string& payload)
             off = next + 1;
             continue;
         }
-        const ssize_t n = ::sendto(m_udpSocketFd,
-                                   payload.data() + off,
-                                   end - off,
-                                   0,
-                                   reinterpret_cast<sockaddr*>(&addr),
-                                   sizeof(addr));
+        const auto n = SystemSocket::Send(m_udpSocketFd,
+                                          reinterpret_cast<const uint8_t*>(payload.data() + off),
+                                          end - off);
         if (n < 0)
         {
             NS_LOG_WARN("UDP sendto failed: " << std::strerror(errno));
