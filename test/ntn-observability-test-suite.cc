@@ -109,7 +109,7 @@ class InfluxFileSinkRoundTripTest : public TestCase
   private:
     void DoRun() override
     {
-        const std::string path = "/tmp/ntn-observability-test.lp";
+        const std::string path = CreateTempDirFilename("ntn-observability-test.lp");
         std::remove(path.c_str());
 
         NtnObservabilityHelper helper;
@@ -162,7 +162,7 @@ class InfluxSinkBoundedBufferTest : public TestCase
   private:
     void DoRun() override
     {
-        const std::string path = "/tmp/ntn-observability-bounded-buffer-test.lp";
+        const std::string path = CreateTempDirFilename("ntn-observability-bounded-buffer-test.lp");
         std::remove(path.c_str());
 
         Ptr<NtnInfluxSink> sink = CreateObject<NtnInfluxSink>();
@@ -215,7 +215,7 @@ class NetSimulyzerJsonShapeTest : public TestCase
   private:
     void DoRun() override
     {
-        const std::string path = "/tmp/ntn-observability-test.json";
+        const std::string path = CreateTempDirFilename("ntn-observability-test.json");
         std::remove(path.c_str());
 
         NtnObservabilityHelper helper;
@@ -374,7 +374,7 @@ class ReproManifestRoundTripTest : public TestCase
   private:
     void DoRun() override
     {
-        const std::string path = "/tmp/ntn-repro-manifest-test.json";
+        const std::string path = CreateTempDirFilename("ntn-repro-manifest-test.json");
         std::remove(path.c_str());
 
         const char* argv[] = {"./ns3", "run", "oran-ntn-full-scenario",
@@ -596,7 +596,7 @@ class SceneRecorderServingEdgeFollowsHandoverTest : public TestCase
 
     void DoRun() override
     {
-        const std::string czmlPath = "/tmp/ntn-scene-obs05.czml";
+        const std::string czmlPath = CreateTempDirFilename("ntn-scene-obs05.czml");
         std::remove(czmlPath.c_str());
 
         Ptr<Node> satA = CreateObject<Node>();
@@ -722,7 +722,7 @@ class ObservabilityLabelInjectionTest : public TestCase
 
         // ---- CZML ----
         {
-            const std::string czmlPath = "/tmp/ntn-obs10.czml";
+            const std::string czmlPath = CreateTempDirFilename("ntn-obs10.czml");
             std::remove(czmlPath.c_str());
 
             Ptr<Node> sat = CreateObject<Node>();
@@ -769,8 +769,8 @@ class SceneRecorderEndToEndTest : public TestCase
 
     void DoRun() override
     {
-        const std::string nsPath = "/tmp/ntn-scene-test.json";
-        const std::string czmlPath = "/tmp/ntn-scene-test.czml";
+        const std::string nsPath = CreateTempDirFilename("ntn-scene-test.json");
+        const std::string czmlPath = CreateTempDirFilename("ntn-scene-test.czml");
         std::remove(nsPath.c_str());
         std::remove(czmlPath.c_str());
 
@@ -1117,7 +1117,7 @@ class SceneRecorderLinksReachNetSimulyzerTest : public TestCase
 
     void DoRun() override
     {
-        const std::string jsonPath = "/tmp/ntn-scene-obs06.scene.json";
+        const std::string jsonPath = CreateTempDirFilename("ntn-scene-obs06.scene.json");
         std::remove(jsonPath.c_str());
 
         Ptr<Node> satA = CreateObject<Node>();
