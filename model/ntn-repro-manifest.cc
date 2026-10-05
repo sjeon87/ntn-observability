@@ -30,7 +30,11 @@ NowIso8601Utc()
 {
     std::time_t t = std::time(nullptr);
     std::tm tm{};
+#ifdef _WIN32
+    gmtime_s(&tm, &t);
+#else
     gmtime_r(&t, &tm);
+#endif
     char buf[32];
     std::strftime(buf, sizeof(buf), "%Y-%m-%dT%H:%M:%SZ", &tm);
     return buf;

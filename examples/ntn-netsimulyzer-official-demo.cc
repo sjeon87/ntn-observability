@@ -316,7 +316,11 @@ main(int argc, char* argv[])
     // an empty string for it.
     const std::time_t epochT = static_cast<std::time_t>(wcfg.epoch_unix_s);
     std::tm epochTm{};
+#ifdef _WIN32
+    gmtime_s(&epochTm, &epochT);
+#else
     gmtime_r(&epochT, &epochTm);
+#endif
     char epochBuf[32];
     std::strftime(epochBuf, sizeof(epochBuf), "%Y-%m-%dT%H:%M:%SZ", &epochTm);
 
